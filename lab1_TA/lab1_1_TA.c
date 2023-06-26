@@ -1,51 +1,37 @@
-﻿#include <stdio.h>
-#include <stdlib.h>
-#include <locale.h>
+﻿#define _CRT_SECURE_NO_WARNINGS
+#include <stdio.h>
+#include <ctype.h>
 
 int main() {
-    setlocale(LC_ALL, ".65001"); // Встановлюємо кодування UTF-8
-
     FILE* file;
-    char symbol;
-    int first_digit, second_digit;
+    char filename[] = "file.txt";
+    char firstChar, secondChar;
 
-    // Відкриття файлу для читання
-    fopen_s(&file, "file.txt", "r");
-
-    // Перевірка, чи файл вдало відкрито
+    // Відкриття файлу
+    file = fopen(filename, "r");
     if (file == NULL) {
-        printf("Помилка при відкритті файлу\n");
-        exit(1);
+        printf("Помилка відкриття файлу.\n");
+        return 1;
     }
 
-    // Читання першого символу
-    symbol = fgetc(file);
+    // Зчитування перших двох символів з файлу
+    firstChar = fgetc(file);
+    secondChar = fgetc(file);
 
-    // Перевірка, чи перший символ є цифрою
-    if (symbol >= '0' && symbol <= '9') {
-        first_digit = symbol - '0';
+    // Перевірка, чи перші два символи є цифрами
+    if (isdigit(firstChar) && isdigit(secondChar)) {
+        int number = (firstChar - '0') * 10 + (secondChar - '0');
 
-        // Читання другого символу
-        symbol = fgetc(file);
-
-        // Перевірка, чи другий символ є цифрою
-        if (symbol >= '0' && symbol <= '9') {
-            second_digit = symbol - '0';
-
-            // Перевірка, чи знайдене число є парним
-            if ((first_digit * 10 + second_digit) % 2 == 0) {
-                printf("Знайдене число є парним\n");
-            }
-            else {
-                printf("Знайдене число є непарним\n");
-            }
+        // Перевірка, чи знайдене число є парним
+        if (number % 2 == 0) {
+            printf("Знайдене число %d є парним.\n", number);
         }
         else {
-            printf("Другий символ не є цифрою\n");
+            printf("Знайдене число %d не є парним.\n", number);
         }
     }
     else {
-        printf("Перший символ не є цифрою\n");
+        printf("Перші два символи не є цифрами.\n");
     }
 
     // Закриття файлу
