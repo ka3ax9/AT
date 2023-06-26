@@ -1,39 +1,30 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include <stdio.h>
+#define _CRT_SECURE_NO_WARNINGS
+#include <stdio.h>
 #include <stdlib.h>
 
-void create_multiple_of_11_file(char* input_file, char* output_file) {
-    FILE* input = fopen(input_file, "rb");
-    if (input == NULL) {
-        printf("Помилка: неможливо відкрити вхідний файл!\n");
-        return;
+void createFileWithMultiplesOfEleven(char* inputFileName, char* outputFileName) {
+    FILE* inputFile = fopen(inputFileName, "rb");
+    FILE* outputFile = fopen(outputFileName, "w");
+
+    if (inputFile == NULL || outputFile == NULL) {
+        printf("Помилка при відкритті файлу.\n");
+        exit(1);
     }
 
-    FILE* output = fopen(output_file, "wb");
-    if (output == NULL) {
-        printf("Помилка: неможливо створити вихідний файл!\n");
-        return;
-    }
-
-    int num;
-    int count = 0; // Лічильник кратних чисел
-
-    while (fread(&num, sizeof(int), 1, input)) {
-        if (num % 11 == 0) {
-            fwrite(&num, sizeof(int), 1, output);
-            count++;
+    int number;
+    while (fread(&number, sizeof(int), 1, inputFile) == 1) {
+        if (number % 11 == 0) {
+            fprintf(outputFile, "%d\n", number);
         }
     }
 
-    fclose(input);
-    fclose(output);
-
-    printf("Файл успішно створено! Кількість кратних чисел: %d\n", count);
+    fclose(inputFile);
+    fclose(outputFile);
 }
 
 int main() {
-    char input_file[] = "input.bin";
-    char output_file[] = "output.bin";
-    create_multiple_of_11_file(input_file, output_file);
+    createFileWithMultiplesOfEleven("input.bin", "output.txt");
     return 0;
 }
